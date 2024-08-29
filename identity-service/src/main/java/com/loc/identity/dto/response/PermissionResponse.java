@@ -1,6 +1,4 @@
-package com.loc.profile.dto.request;
-
-import java.time.LocalDate;
+package com.loc.identity.dto.response;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -14,9 +12,7 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class ProfileCreationRequest {
-    String firstName;
-    String lastName;
-    LocalDate dob;
-    String city;
+public class PermissionResponse {
+    String name;
+    String description;
 }

@@ -1,10 +1,14 @@
 package com.loc.profile.service;
 
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 
-import com.loc.profile.dto.request.ProfileCreationRequest;
+import com.loc.profile.dto.request.ProfileRequest;
 import com.loc.profile.dto.response.ProfileResponse;
 import com.loc.profile.entity.UserProfile;
+import com.loc.profile.exception.AppException;
+import com.loc.profile.exception.ErrorCode;
 import com.loc.profile.mapper.UserProfileMapper;
 import com.loc.profile.repository.UserProfileRepository;
 
@@ -21,7 +25,7 @@ public class UserProfileService {
     UserProfileRepository userProfileRepository;
     UserProfileMapper profileMapper;
 
-    public ProfileResponse createProfile(ProfileCreationRequest request) {
+    public ProfileResponse createProfile(ProfileRequest request) {
         UserProfile userProfile = profileMapper.toUserProfile(request);
         userProfile = userProfileRepository.save(userProfile);
         return profileMapper.toProfileResponse(userProfile);
@@ -31,6 +35,21 @@ public class UserProfileService {
         UserProfile userProfile =
                 userProfileRepository.findById(profileId).orElseThrow(() -> new RuntimeException("Profile not Found"));
 
+        return profileMapper.toProfileResponse(userProfile);
+    }
+
+    public List<ProfileResponse> getProfiles() {
+        return userProfileRepository.findAll().stream()
+                .map(profileMapper::toProfileResponse)
+                .toList();
+    }
+
+    public ProfileResponse updateProfile(String profileId, ProfileRequest request) {
+        UserProfile userProfile = userProfileRepository
+                .findById(profileId)
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTS));
+        profileMapper.updateUserProfile(userProfile, request);
+        userProfileRepository.save(userProfile);
         return profileMapper.toProfileResponse(userProfile);
     }
 }
