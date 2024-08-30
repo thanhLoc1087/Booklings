@@ -18,9 +18,11 @@ import com.loc.identity.entity.Role;
 import com.loc.identity.entity.User;
 import com.loc.identity.exception.AppException;
 import com.loc.identity.exception.ErrorCode;
+import com.loc.identity.mapper.ProfileMapper;
 import com.loc.identity.mapper.UserMapper;
 import com.loc.identity.repository.RoleRepository;
 import com.loc.identity.repository.UserRepository;
+import com.loc.identity.repository.httpclient.ProfileClient;
 
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -36,6 +38,8 @@ public class UserService {
     UserRepository userRepository;
     RoleRepository roleRepository;
     PasswordEncoder passwordEncoder;
+    ProfileClient profileClient;
+    ProfileMapper profileMapper;
 
     public UserResponse createUser(UserCreationRequest request) {
         User user = userMapper.toUser(request);
@@ -48,6 +52,10 @@ public class UserService {
 
         try {
             user = userRepository.save(user);
+
+            var profileRequest = profileMapper.toProfileCreationRequest(request);
+            profileRequest.setUserId(user.getId());
+            profileClient.createProfile(profileRequest);
         } catch (DataIntegrityViolationException exception) {
             throw new AppException(ErrorCode.USER_EXISTS);
         }
