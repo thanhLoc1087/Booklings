@@ -1,4 +1,6 @@
-package com.loc.identity.dto.request;
+package com.loc.api_gateway.dto.response;
+
+import com.fasterxml.jackson.annotation.JsonInclude;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -12,6 +14,11 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class IntrospectRequest {
-    String token;
+@JsonInclude(JsonInclude.Include.NON_NULL)
+public class ApiResponse<T> {
+    @Builder.Default
+    int code = 1000;
+
+    String message;
+    T result;
 }

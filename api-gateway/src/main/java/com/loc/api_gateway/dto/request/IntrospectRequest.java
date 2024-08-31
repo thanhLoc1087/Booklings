@@ -1,4 +1,4 @@
-package com.loc.identity.dto.request;
+package com.loc.api_gateway.dto.request;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;

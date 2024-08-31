@@ -1,4 +1,4 @@
-package com.loc.identity.dto.request;
+package com.loc.api_gateway.dto.response;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -12,6 +12,6 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class IntrospectRequest {
-    String token;
+public class IntrospectResponse {
+    boolean valid;
 }
