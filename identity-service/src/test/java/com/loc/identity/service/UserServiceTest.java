@@ -21,7 +21,6 @@ import org.springframework.test.context.TestPropertySource;
 import com.loc.identity.dto.request.UserCreationRequest;
 import com.loc.identity.entity.User;
 import com.loc.identity.exception.AppException;
-import com.loc.identity.mapper.UserMapper;
 import com.loc.identity.repository.UserRepository;
 
 import lombok.extern.slf4j.Slf4j;
@@ -36,9 +35,6 @@ class UserServiceTest {
 
     @MockBean
     private UserRepository userRepository;
-
-    @Autowired
-    UserMapper userMapper;
 
     private UserCreationRequest request;
     private User user;
@@ -56,13 +52,7 @@ class UserServiceTest {
                 .dob(dob)
                 .build();
 
-        user = User.builder()
-                .id("jk31hkj3h5")
-                .username("johndoe")
-                .firstName("John")
-                .lastName("Doe")
-                .dob(dob)
-                .build();
+        user = User.builder().id("jk31hkj3h5").username("johndoe").build();
     }
 
     @Test

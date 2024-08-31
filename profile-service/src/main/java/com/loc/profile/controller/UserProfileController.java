@@ -23,13 +23,6 @@ import lombok.experimental.FieldDefaults;
 public class UserProfileController {
     UserProfileService userProfileService;
 
-    @PostMapping("/users")
-    public ApiResponse<ProfileResponse> createProfile(@RequestBody ProfileRequest request) {
-        return ApiResponse.<ProfileResponse>builder()
-                .result(userProfileService.createProfile(request))
-                .build();
-    }
-
     @GetMapping("/{profileId}")
     public ApiResponse<ProfileResponse> getUserProfile(@PathVariable String profileId) {
         return ApiResponse.<ProfileResponse>builder()
