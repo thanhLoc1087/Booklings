@@ -1,4 +1,4 @@
-package com.loc.identity.configuration;
+package com.loc.profile.configuration;
 
 import java.text.ParseException;
 

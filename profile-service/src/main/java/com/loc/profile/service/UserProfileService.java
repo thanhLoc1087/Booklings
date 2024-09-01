@@ -2,6 +2,7 @@ package com.loc.profile.service;
 
 import java.util.List;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import com.loc.profile.dto.request.ProfileRequest;
@@ -38,6 +39,7 @@ public class UserProfileService {
         return profileMapper.toProfileResponse(userProfile);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     public List<ProfileResponse> getProfiles() {
         return userProfileRepository.findAll().stream()
                 .map(profileMapper::toProfileResponse)
