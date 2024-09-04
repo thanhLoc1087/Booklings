@@ -42,7 +42,8 @@ public class AuthenticationFilter implements GlobalFilter, Ordered {
     @NonFinal
     String[] publicEndpoints = {
         "/identity/auth/.*",
-        "/identity/users/registration"
+        "/identity/users/registration",
+        "/notification/email/send",
     };
 
     @Override
@@ -75,12 +76,12 @@ public class AuthenticationFilter implements GlobalFilter, Ordered {
 
     private boolean isPublicEndpoint(ServerHttpRequest request) {
         return Arrays.stream(publicEndpoints)
-        .anyMatch(s -> request.getURI().getPath().matches("/" + apiPrefix + s));
+                .anyMatch(s -> request.getURI().getPath().matches("/" + apiPrefix + s));
     }
 
     Mono<Void> unauthenticated(ServerHttpResponse response) {
         ApiResponse<?> apiResponse = ApiResponse.builder()
-            .code(1005)
+            .code(5005)
             .message("Unauthenticated")
             .build();
         String body = null;

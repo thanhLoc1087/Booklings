@@ -23,8 +23,7 @@ public class WebClientConfiguration {
     }
     
     @Bean
-    public CorsWebFilter corsWebFilter() {
-
+    CorsWebFilter corsWebFilter(){
         CorsConfiguration corsConfiguration = new CorsConfiguration();
         corsConfiguration.setAllowedOrigins(List.of("*"));
         corsConfiguration.setAllowedHeaders(List.of("*"));
@@ -32,6 +31,7 @@ public class WebClientConfiguration {
 
         UrlBasedCorsConfigurationSource urlBasedCorsConfigurationSource = new UrlBasedCorsConfigurationSource();
         urlBasedCorsConfigurationSource.registerCorsConfiguration("/**", corsConfiguration);
+
         return new CorsWebFilter(urlBasedCorsConfigurationSource);
     }
 
