@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.List;
 
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -40,6 +41,7 @@ public class UserService {
     PasswordEncoder passwordEncoder;
     ProfileClient profileClient;
     ProfileMapper profileMapper;
+    KafkaTemplate<String, String> kafkaTemplate;
 
     public UserResponse createUser(UserCreationRequest request) {
         User user = userMapper.toUser(request);
@@ -56,6 +58,10 @@ public class UserService {
             var profileRequest = profileMapper.toProfileCreationRequest(request);
             profileRequest.setUserId(user.getId());
             profileClient.createProfile(profileRequest);
+
+            // Publish message to Kafka
+            kafkaTemplate.send("onboard-successful", "Welcome to Bookling, @" + user.getUsername());
+
         } catch (DataIntegrityViolationException exception) {
             throw new AppException(ErrorCode.USER_EXISTS);
         }
