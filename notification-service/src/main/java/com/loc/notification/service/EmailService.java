@@ -2,6 +2,7 @@ package com.loc.notification.service;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.loc.notification.dto.request.EmailRequest;
@@ -25,7 +26,8 @@ public class EmailService {
     EmailClient emailClient;
 
     @NonFinal
-    String apiKey = "api-key";
+    @Value("${notification.email.brevo-apikey}")
+    String apiKey;
 
     public EmailResponse sendEmail(SendEmailRequest request) {
         EmailRequest emailRequest = EmailRequest.builder()
