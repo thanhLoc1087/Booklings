@@ -31,9 +31,6 @@ public class UserProfile {
     @Property("userId")
     String userId; // User entity id
 
-    String username;
-    String email;
-
     String firstName;
     String lastName;
     LocalDate dob;
