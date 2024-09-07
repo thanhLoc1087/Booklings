@@ -1,13 +1,13 @@
 package com.loc.post.dto.response;
 
+import java.time.Instant;
+
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
-
-import java.time.Instant;
 
 @Data
 @Builder
@@ -17,7 +17,7 @@ import java.time.Instant;
 public class PostResponse {
     String id;
     String content;
-    String profileId;
+    String userId;
     Instant createdDate;
     Instant modifiedDate;
 }
