@@ -3,6 +3,8 @@ package com.loc.identity.dto.request;
 import java.time.LocalDate;
 import java.util.List;
 
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
 import com.loc.identity.validator.DateOfBirthConstraint;
@@ -25,6 +27,10 @@ public class UserCreationRequest {
 
     @Size(min = 8, message = "PASSWORD_INVALID")
     String password;
+
+    @Email(message = "INVALID_EMAIL")
+    @NotBlank(message = "EMAIL_IS_REQUIRED")
+    String email;
 
     String firstName;
     String lastName;

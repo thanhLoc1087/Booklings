@@ -1,6 +1,6 @@
-package com.loc.identity.dto.response;
+package com.loc.event.dto;
 
-import java.time.LocalDate;
+import java.util.Map;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -14,13 +14,11 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class ProfileResponse {
-    String id;
-    String userId;
-    String username;
-    String email;
-    String firstName;
-    String lastName;
-    LocalDate dob;
-    String city;
+public class NotificationEvent {
+    String channel; // email, sms,...
+    String recipient;
+    String templateCode;
+    Map<String, Object> params;
+    String subject;
+    String body;
 }

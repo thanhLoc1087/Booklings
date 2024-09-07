@@ -11,6 +11,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.loc.event.dto.NotificationEvent;
 import com.loc.identity.constant.PredefinedRoles;
 import com.loc.identity.dto.request.UserCreationRequest;
 import com.loc.identity.dto.request.UserUpdateRequest;
@@ -41,7 +42,7 @@ public class UserService {
     PasswordEncoder passwordEncoder;
     ProfileClient profileClient;
     ProfileMapper profileMapper;
-    KafkaTemplate<String, String> kafkaTemplate;
+    KafkaTemplate<String, Object> kafkaTemplate;
 
     public UserResponse createUser(UserCreationRequest request) {
         User user = userMapper.toUser(request);
@@ -51,22 +52,31 @@ public class UserService {
         roles.add(PredefinedRoles.USER);
 
         user.setRoles(roles);
+        user.setEmailVerified(false);
 
         try {
             user = userRepository.save(user);
-
-            var profileRequest = profileMapper.toProfileCreationRequest(request);
-            profileRequest.setUserId(user.getId());
-            profileClient.createProfile(profileRequest);
-
-            // Publish message to Kafka
-            kafkaTemplate.send("onboard-successful", "Welcome to Bookling, @" + user.getUsername());
-
         } catch (DataIntegrityViolationException exception) {
             throw new AppException(ErrorCode.USER_EXISTS);
         }
 
-        return userMapper.toUserResponse(user);
+        var profileRequest = profileMapper.toProfileCreationRequest(request);
+        profileRequest.setUserId(user.getId());
+
+        var profile = profileClient.createProfile(profileRequest);
+        NotificationEvent notificationEvent = NotificationEvent.builder()
+                .channel("EMAIL")
+                .recipient(request.getEmail())
+                .subject("Welcome to Bookling")
+                .body("Helloe, @" + request.getUsername())
+                .build();
+
+        // Publish message to Kafka
+        kafkaTemplate.send("notification-delivery", notificationEvent);
+        var userCreationReponse = userMapper.toUserResponse(user);
+        userCreationReponse.setId(profile.getId());
+
+        return userCreationReponse;
     }
 
     @PreAuthorize("hasRole('ADMIN')")
