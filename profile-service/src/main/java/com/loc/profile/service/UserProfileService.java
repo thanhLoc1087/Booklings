@@ -3,6 +3,7 @@ package com.loc.profile.service;
 import java.util.List;
 
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import com.loc.profile.dto.request.ProfileRequest;
@@ -53,5 +54,16 @@ public class UserProfileService {
         profileMapper.updateUserProfile(userProfile, request);
         userProfileRepository.save(userProfile);
         return profileMapper.toProfileResponse(userProfile);
+    }
+
+    public ProfileResponse getMyProfile() {
+        var authentication = SecurityContextHolder.getContext().getAuthentication();
+        String userId = authentication.getName();
+
+        var profile = userProfileRepository
+                .findByUserId(userId)
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTS));
+
+        return profileMapper.toProfileResponse(profile);
     }
 }
